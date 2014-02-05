@@ -1,18 +1,28 @@
 package com.kgrwhite.cyrene.graphics;
 
+import java.util.Random;
+
 public class Screen {
 
+	public int tileAmount = 64;
+	public int tileSize = 16;
+	
 	private int width, height;
 	public int[] pixels;
 	
-	int xTime = 0;
-	int yTime = 0;
-	int counter = 0;
+	public int[] tiles = new int[tileAmount * tileAmount];
+	
+	private Random random = new Random();
+	
 	
 	public Screen(int width, int height){
 		this.width = width;
 		this.height = height;
 		pixels = new int[width * height];
+		
+		for (int i = 0; i < tileAmount*tileAmount; i++){
+			tiles[i] = random.nextInt(0xffffff);
+		}
 	}
 	
 	public void clear() {
@@ -22,17 +32,32 @@ public class Screen {
 	}
 	
 	public void render() {
-		counter++;
-		if(counter % 100 == 0) xTime++;
-		if(counter % 100 == 0) yTime++;
-		
+				
 		for (int y = 0; y < height; y++){
-			if (yTime  < 0 || yTime >= height) break;
+			if (y  < 0 || y >= height) break;
 			for (int x = 0; x < width; x++) {
-				if (xTime < 0 || xTime >= width) break;
-				pixels[xTime + yTime * width] = 0xff00ff;
+				if (x < 0 || x >= width) break;
+				int tileIndex = (x / tileSize) + (y / tileSize) * tileAmount;
+				
+				pixels[x + y * width] = tiles[tileIndex];
 			}
 		}
+	}
+	
+	public int getTileAmount(){
+		return this.tileAmount;
+	}
+	
+	public void setTileAmount(int tileAmt){
+		this.tileAmount = tileAmt;
+	}
+	
+	public int getTileSize(){
+		return this.tileSize;
+	}
+	
+	public void setTileSize(int tileSize){
+		this.tileSize = tileSize;
 	}
 	
 }
